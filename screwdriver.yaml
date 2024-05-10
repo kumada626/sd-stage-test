@@ -1,0 +1,29 @@
+shared:
+  image: node:20
+jobs:
+  ci-deploy1:
+    requires: []
+    steps:
+      - echo: echo deploy1
+  ci-deploy2:
+    requires: []
+    steps:
+      - echo: echo deploy2
+  ci-test:
+    requires: [ci-deploy1, ci-deploy2]
+    steps:
+      - echo: echo test
+  ci-last:
+    requires: [ci-test]
+    steps:
+      - echo: echo last
+  triggered-by-stage:
+    requires: [~stage@integration]
+    steps:
+      - echo: echo triggered
+
+stages:
+  integration:
+    requires: [~commit]
+    jobs: [ci-deploy1, ci-deploy2, ci-test, ci-last]
+    description: "This is stage."
